@@ -14,7 +14,6 @@ class Cell(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     i = db.Column(db.Integer, default=0)
     j = db.Column(db.Integer, default=0)
-    k = db.Column(db.Integer, default=0)
     value = db.Column(db.Float, default=0.0)
     def __repr__(self):
         return f'<cell {self.id}>'
