@@ -1,0 +1,82 @@
+{% extends "base.html" %} {% block title %} TABLES - {{collection.name |
+upper()}} {% endblock title %} {% block content %}
+<div id="create_table">
+  <form
+    action="{{ url_for('table.create_table', collection_id=collection.id) }}"
+    method="POST"
+  >
+    <input type="text" name="name" placeholder="name" />
+    <input type="submit" value="create table" />
+  </form>
+</div>
+<div class="table_list">
+  {% for table in tables %}
+
+  <div class="table_container">
+    <span class="table_name">
+      {{table.name}} {#{{table.n_col}} {% if table.param_names != None
+      %}{{table.param_names.split('.')}}{% endif %}#}
+    </span>
+    <div class="table">
+      {% if table.param_names != None and table.n_col > 0%}
+      <div>
+        <form
+          action="{{ url_for('table.add_record', collection_id=collection.id, table_id=table.id) }}"
+          method="POST"
+        >
+          {% for field in table.param_names.split('.')%}
+          <input type="text" name="{{field}}" placeholder="{{field}}" />
+          {% endfor %}
+          <input type="submit" value="add record" />
+        </form>
+      </div>
+      {% endif %}
+      <div style="width: 100%; height: 400px; background: grey">
+        <a
+          href="{{ url_for('table.delete_table', table_id=table.id, collection_id=collection.id) }}"
+          >delete table</a
+        >
+        {% if table.formula_name == "" %}
+        <form
+          action="{{ url_for('table.choose_formula', collection_id=collection.id, table_id=table.id) }}"
+          method="POST"
+        >
+          <select name="formula_name">
+            {% for formula in formulas %}
+            <option value="{{formula.id}}">{{formula.name}}</option>
+            {% endfor %}
+          </select>
+          <input type="submit" value="chose" />
+        </form>
+        {%else%} {% if table.param_names != None and table.n_col > 0%}
+
+        <table>
+          <tr>
+            {% for field in table.param_names.split('.')%}
+            <th>{{field}}</th>
+            {% endfor %}
+            <th>{{table.formula_name}}</th>
+          </tr>
+          {% for row in table.cells | to2D(table.n_col+1) | reverse %}
+          <tr>
+            {% for record in row %}
+            <td>{{record.value}}</td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        </table>
+        {% endif %} {%endif %}
+      </div>
+    </div>
+  </div>
+
+  {% endfor %}
+</div>
+<script
+  type="text/javascript"
+  scr="{{ url_for('static', filename='js/script.js') }}"
+></script>
+
+{% endblock content %} {% block script %}
+<script src=" {{ url_for('static', filename='js/script_t.js') }} "></script>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %} {% block content %}
+<div id="create_formula">
+  <form action="{{ url_for('formula.create_formula') }}" method="POST">
+    <input type="text" name="name" placeholder="name" />
+    <input type="submit" value="create formula" />
+  </form>
+</div>
+<div class="formula_list">
+  {% for formula in formulas %}
+  <div class="formula_container">
+    <span class="formula_name"> {{formula.name}} </span>
+    <div class="formula">{% include "formula/script.html" %}</div>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock content %} {% block script %}
+<script src=" {{ url_for('static', filename='js/script_f.js') }} "></script>
+{% endblock %}

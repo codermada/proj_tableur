@@ -1,0 +1,21 @@
+{% extends "base.html" %} {% block title %} COLLECTIONS {% endblock title %} {%
+block content %}
+
+<div>
+  <form action="/collection" method="POST">
+    <input type="text" name="name" placeholder="name" />
+    <input type="submit" value="create" />
+  </form>
+</div>
+<div>
+  <ul>
+    {% for collection in collections %}{%set i = 0%}
+    <li>
+      <a href="{{ url_for('table.index', collection_id=collection.id) }}"
+        >{{collection.name}}</a
+      >
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock content %}

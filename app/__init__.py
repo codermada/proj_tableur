@@ -16,4 +16,13 @@ def create_app(config_name):
     from app.home import home as home_blueprint
     app.register_blueprint(home_blueprint, url_prefix='/')
 
+    from app.formula import formula as formula_blueprint
+    app.register_blueprint(formula_blueprint, url_prefix='/formula')
+
+    from app.collection import collection as collection_blueprint
+    app.register_blueprint(collection_blueprint, url_prefix='/collection')
+
+    from app.table import table as table_blueprint
+    app.register_blueprint(table_blueprint, url_prefix='/tables')
+
     return app

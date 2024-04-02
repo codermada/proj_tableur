@@ -1,52 +1,61 @@
 from . import db
+from .db_operations import create, delete
+
+import os
+
+path = os.path.join(os.path.curdir,"app/formulas.data.py")
+
+with open(path, 'r') as file:
+    formulas = file.read().split("#")
 
 
-table = db.Table(
-    'table',
-    db.Column('cell_id', db.Integer, db.ForeignKey('cells.id')),
-    db.Column('row_id', db.Integer, db.ForeignKey('rows.id')),
-    db.Column('column_id', db.Integer, db.ForeignKey('columns.id'))
-)
+class Formula(db.Model):
+    __tablename__ = 'formulas'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(500))
+    kind = db.Column(db.String(500), default="general")
+    script = db.Column(db.Text, default="")
+    def __repr__(self):
+        return f'<Formula {self.id}>'
+    @staticmethod
+    def generate():
+        for (name, script) in list(zip(formulas[0].strip("\n").split('.'), formulas[1:])):
+            create(Formula, db, {'name': name, 'script': script})
+    @staticmethod
+    def delete_all():
+        for formula in Formula.query.filter_by(kind='general').all():
+            delete(Formula, db, formula.id)
+    @staticmethod
+    def update():
+        Formula.delete_all()
+        Formula.generate()
 
+class Collection(db.Model):
+    __tablename__ = 'collections'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(500), default=f"collection_{str(id)}")
+    tables = db.relationship('Table', backref='collection', lazy='dynamic')
+    def __repr__(self):
+        return f'<Collection {self.id}>'
+
+class Table(db.Model):
+    __tablename__ = 'tables'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(500), default="tables")
+    collection_id = db.Column(db.Integer, db.ForeignKey('collections.id'))
+    formula_name = db.Column(db.String(500), default="")
+    param_names = db.Column(db.String(5000), default="")
+    script = db.Column(db.Text, default="")
+    n_col = db.Column(db.Integer, default=0)
+    cells = db.relationship('Cell', backref='table', lazy='dynamic')
+    def __repr__(self):
+        return f'<Table {self.id}>'
 
 class Cell(db.Model):
     __tablename__ = 'cells'
     id = db.Column(db.Integer, primary_key=True)
-    i = db.Column(db.Integer, default=0)
-    j = db.Column(db.Integer, default=0)
-    value = db.Column(db.Float, default=0.0)
+    key = db.Column(db.String(500), default="")
+    value = db.Column(db.Float, default=0)
+    table_id = db.Column(db.Integer, db.ForeignKey('tables.id'))
     def __repr__(self):
-        return f'<cell {self.id}>'
-    def set_i(self, i):
-        self.i = i
-    def set_j(self, j):
-        self.j = j
-
-
-class Column(db.Model):
-    __tablename__ = 'columns'
-    id = db.Column(db.Integer, primary_key=True)
-    j = db.Column(db.Integer, default=0)
-    cells = db.relationship('Cell', 
-                             secondary=table,
-                             backref=db.backref('columns', lazy='dynamic'),
-                             lazy='dynamic')
-    def __repr__(self):
-        return f'<column {self.id}>'
-    def set_j(self, j):
-        self.j = j
-
-
-class Row(db.Model):
-    __tablename__ = 'rows'
-    id = db.Column(db.Integer, primary_key=True)
-    i = db.Column(db.Integer, default=0)
-    n_max_col = db.Column(db.Integer, default=1)
-    columns = db.relationship('Column', 
-                             secondary=table,
-                             backref=db.backref('rows', lazy='dynamic'),
-                             lazy='dynamic')
-    def __repr__(self):
-        return f'<row {self.id}>'
-    def set_i(self, i):
-        self.i = i
+        return f'<Cell {self.id}>'

@@ -1,0 +1,57 @@
+.formula_list,
+.table_list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.formula_name,
+.table_name {
+  cursor: pointer;
+  background-color: #eee;
+  /* width: 25px; */
+  overflow: scroll;
+  display: block;
+}
+
+.formula_name:hover,
+.table_name:hover {
+  cursor: pointer;
+  border-top: 1px solid black;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+  width: fit-content;
+  display: block;
+}
+
+.formula,
+.table {
+  padding: 10px;
+  display: none;
+}
+
+.open {
+  border: 1px solid black;
+  border-top: 3px solid black;
+  border-left: 3px solid black;
+  display: block;
+}
+
+.open_ {
+  position: relative;
+  border: 3px solid black;
+  background-color: #c5c5c5;
+  border-bottom: 1px solid black;
+  margin-bottom: -2px;
+  z-index: 1;
+  width: fit-content;
+  display: block;
+}
+
+#script {
+  outline: 0;
+  border: 0;
+  width: 90%;
+  background-color: black;
+  color: white;
+}

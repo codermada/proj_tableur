@@ -1,0 +1,31 @@
+<div id="add_script">
+  {% if formula.kind == 'custom' %}
+  <a href="{{ url_for('formula.delete_formula', formula_id=formula.id) }}"
+    >delete formula</a
+  >
+
+  <form
+    action="{{ url_for('formula.add_script', formula_id=formula.id) }}"
+    method="POST"
+  >
+    <div>
+      <label for="script">Script</label><br />
+      <textarea class="language-python" name="script" rows="10" id="script">
+{{formula.script}}</textarea
+      >
+      <pre>
+        <code class="language-python">{{formula.script}}</code>
+      </pre>
+    </div>
+    {% if formula.script == "" %}
+    <input type="submit" value="add script" />
+    {%else%}
+    <input type="submit" value="update script" />
+    {% endif %}
+  </form>
+  {% else %}
+  <pre>
+    <code class="language-python">{{formula.script}}</code>
+  </pre>
+  {% endif %}
+</div>
