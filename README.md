@@ -1,2 +1,3 @@
 # proj_tableur
-Just a table
+
+Just a table manager
