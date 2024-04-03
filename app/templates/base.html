@@ -21,15 +21,6 @@
     <title>{% block title %} {% endblock title %}</title>
   </head>
   <body>
-    {#
-    <pre>
-      <code class="language-python" id="code">
-print("hey")
-def add():
-  pass
-      </code>
-    </pre>
-    #}
     <a href="{{ url_for('home.index') }}">collections</a>
     <a href="{{ url_for('formula.index') }}">formulas</a>
     {% block content %} {% endblock content %} {% block script %} {% endblock %}

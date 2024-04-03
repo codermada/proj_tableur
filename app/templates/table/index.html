@@ -1,5 +1,12 @@
 {% extends "base.html" %} {% block title %} TABLES - {{collection.name |
 upper()}} {% endblock title %} {% block content %}
+<div>
+  {{collection.name}}
+  <a
+    href="{{ url_for('collection.delete_collection', collection_id=collection.id) }}"
+    >delete collection</a
+  >
+</div>
 <div id="create_table">
   <form
     action="{{ url_for('table.create_table', collection_id=collection.id) }}"
@@ -11,7 +18,6 @@ upper()}} {% endblock title %} {% block content %}
 </div>
 <div class="table_list">
   {% for table in tables %}
-
   <div class="table_container">
     <span class="table_name">
       {{table.name}} {#{{table.n_col}} {% if table.param_names != None
@@ -21,7 +27,7 @@ upper()}} {% endblock title %} {% block content %}
       {% if table.param_names != None and table.n_col > 0%}
       <div>
         <form
-          action="{{ url_for('table.add_record', collection_id=collection.id, table_id=table.id) }}"
+          action="{{ url_for('table.add_record', collection_id=collection.id, table_id=table.id, focused=1) }}"
           method="POST"
         >
           {% for field in table.param_names.split('.')%}
@@ -36,6 +42,11 @@ upper()}} {% endblock title %} {% block content %}
           href="{{ url_for('table.delete_table', table_id=table.id, collection_id=collection.id) }}"
           >delete table</a
         >
+        <a
+          href="{{ url_for('table.view_table', table_id=table.id, collection_id=collection.id) }}"
+          target="_blank"
+          >focus</a
+        >
         {% if table.formula_name == "" %}
         <form
           action="{{ url_for('table.choose_formula', collection_id=collection.id, table_id=table.id) }}"
@@ -48,24 +59,7 @@ upper()}} {% endblock title %} {% block content %}
           </select>
           <input type="submit" value="chose" />
         </form>
-        {%else%} {% if table.param_names != None and table.n_col > 0%}
-
-        <table>
-          <tr>
-            {% for field in table.param_names.split('.')%}
-            <th>{{field}}</th>
-            {% endfor %}
-            <th>{{table.formula_name}}</th>
-          </tr>
-          {% for row in table.cells | to2D(table.n_col+1) | reverse %}
-          <tr>
-            {% for record in row %}
-            <td>{{record.value}}</td>
-            {% endfor %}
-          </tr>
-          {% endfor %}
-        </table>
-        {% endif %} {%endif %}
+        {%else%} {% include "table/_table.html" %}{%endif %}
       </div>
     </div>
   </div>

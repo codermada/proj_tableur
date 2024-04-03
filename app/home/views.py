@@ -3,7 +3,8 @@ from flask import render_template, request, redirect, url_for
 from . import home
 
 from .. import db
-from ..models import Formula
+from ..models import Formula, Cell
+
 
 @home.route('/', methods=['POST', 'GET'])
 def index():

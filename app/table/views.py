@@ -47,10 +47,33 @@ def choose_formula():
 def add_record():
     collection_id = int(request.args.get('collection_id'))
     table_id = int(request.args.get('table_id'))
+    focused = int(request.args.get('focused'))
     table = Table.query.get(table_id)
     add_record_str = """
-for key, value in {**dict(request.form),**{f"'{table.formula_name}'": """+table.formula_name+"""(**dict(request.form))}}.items():
+for key, value in {**dict(request.form),**{f"{table.formula_name}": """+table.formula_name+"""(**dict(request.form))}}.items():
     create(Cell, db, {'key': key, 'value': value, 'table_id': table_id})"""
     script = table.script + "\n{}"
     exec(script.format((add_record_str)))
-    return redirect(url_for('.index', collection_id=collection_id))
+    if focused == 0:
+        return redirect(url_for('.index', collection_id=collection_id))
+    elif focused == 1:
+        return redirect(url_for('.view_table', table_id=table_id, collection_id=collection_id))
+
+@table.route('/view-table', methods=['GET', 'POST'])
+def view_table():
+    collection_id = int(request.args.get('collection_id'))
+    collection = Collection.query.get(collection_id)
+    table_id = int(request.args.get('table_id'))
+    table = Table.query.get(table_id)
+    return render_template("table/table.html", table=table, collection=collection)
+
+@table.route('/show-chart')
+def show_chart():
+    column_name = str(request.args.get('column_name'))
+    table_id = int(request.args.get('table_id'))
+    table = Table.query.get(table_id)
+    cells_list = []
+    cells = list(Cell.query.filter_by(table_id=table_id).filter_by(key=column_name).all())
+    for cell in cells:
+        cells_list.append(cell.value)
+    return render_template("table/charts/cell_chart.html", table=table, data=cells_list, column_name=column_name)

@@ -14,3 +14,10 @@ def index():
         create(Collection, db, {'name': request.form.get('name')})
         return redirect(url_for('.index'))
     return render_template('collection/index.html', collections=collections)
+
+
+@collection.route('/delete-collection', methods=['post', 'get'])
+def delete_collection():
+    collection_id = int(request.args.get('collection_id'))
+    delete(Collection, db, collection_id)
+    return redirect(url_for('.index'))

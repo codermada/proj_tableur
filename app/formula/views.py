@@ -8,8 +8,9 @@ from ..db_operations import create, update, delete
 
 @formula.route('/')
 def index():
-    formulas = Formula.query.all()
-    return render_template('formula/index.html', formulas=formulas)
+    formulas_general = Formula.query.filter_by(kind='general').all()
+    formulas_custom = Formula.query.filter_by(kind='custom').all()
+    return render_template('formula/index.html', formulas_general=formulas_general, formulas_custom=formulas_custom)
 
 @formula.route('/create-formula', methods=['post', 'get'])
 def create_formula():

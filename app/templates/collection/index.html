@@ -8,14 +8,26 @@ block content %}
   </form>
 </div>
 <div>
-  <ul>
+  <div>
     {% for collection in collections %}{%set i = 0%}
-    <li>
+    <div>
       <a href="{{ url_for('table.index', collection_id=collection.id) }}"
         >{{collection.name}}</a
       >
-    </li>
+      <div>
+        {% for table in collection.tables %}
+        <span style="border: 1px solid black; margin-left: 5px; padding: 1px">
+          <a
+            href="{{ url_for('table.view_table', table_id=table.id, collection_id=collection.id) }}"
+            target="_blank"
+            >{{table.name}}</a
+          >{% if table.cells[0]%} | {{table.formula_name}}:
+          {{table.cells[0].get_last_result(table.id, table.n_col + 1)}} {% endif
+          %}</span
+        >{% endfor %}
+      </div>
+    </div>
     {% endfor %}
-  </ul>
+  </div>
 </div>
 {% endblock content %}

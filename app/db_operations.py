@@ -6,7 +6,6 @@ def create(Model, db, data):
 def update(Model, db, data, id):
     model = Model.query.get(int(id))
     for k, v in data.items():
-        print(k, v)
         exec(f"model.{k}=\"\"\"{v}\"\"\"")
     db.session.add(model)
     db.session.commit()
