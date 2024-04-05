@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from . import db
 from .db_operations import create, delete
 
@@ -33,7 +35,7 @@ class Formula(db.Model):
 class Collection(db.Model):
     __tablename__ = 'collections'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(500), default=f"collection_{str(id)}")
+    name = db.Column(db.String(500), default="collection")
     tables = db.relationship('Table', backref='collection', lazy='dynamic', cascade="all, delete-orphan")
     def __repr__(self):
         return f'<Collection {self.id}>'
@@ -41,7 +43,7 @@ class Collection(db.Model):
 class Table(db.Model):
     __tablename__ = 'tables'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(500), default="tables")
+    name = db.Column(db.String(500), default="table")
     collection_id = db.Column(db.Integer, db.ForeignKey('collections.id'))
     formula_name = db.Column(db.String(500), default="")
     param_names = db.Column(db.String(5000), default="")
@@ -55,14 +57,15 @@ class Cell(db.Model):
     __tablename__ = 'cells'
     id = db.Column(db.Integer, primary_key=True)
     key = db.Column(db.String(500), default="")
-    value = db.Column(db.Float, default=0)
+    value = db.Column(db.Float, default=None)
     table_id = db.Column(db.Integer, db.ForeignKey('tables.id'))
+    created = db.Column(db.DateTime, default=datetime.utcnow())
     def __repr__(self):
         return f'<Cell {self.id}>'
     @staticmethod
     def get_last_result(table_id, n_col):
         table = Table.query.get(table_id)
-        from api.resources import to2D, reverse
+        from utilities import to2D, reverse
         cell_list = []
         cells = list(table.cells.filter_by(table_id=table_id))
         for cell in cells:

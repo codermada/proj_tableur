@@ -11,7 +11,8 @@ manager = Manager(app)
 migration = Migrate(app, db)
 api = Api(app)
 
-from api.resources import TableResource, CellResource, to2D, reverse
+from api.resources import TableResource, CellResource
+from utilities import to2D, reverse
 api.add_resource(TableResource, "/api/table-cells")
 api.add_resource(CellResource, "/api/table-cell")
 app.jinja_env.filters['to2D'] = to2D

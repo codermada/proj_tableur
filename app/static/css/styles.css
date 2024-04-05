@@ -1,3 +1,78 @@
+body {
+  background-color: #dde;
+}
+* {
+  margin: 2px;
+}
+.flashed {
+  position: absolute;
+  left: 5px;
+  width: 94%;
+  background-color: #aaddff;
+  border: 5px solid #12bbcc;
+  color: #12bbcc;
+  text-align: center;
+  padding: 10px;
+  z-index: 100;
+  animation: flashing 0.5s ease-in-out;
+}
+@keyframes flashing {
+  0% {
+    margin-top: -100px;
+  }
+  50% {
+    margin-top: 5px;
+  }
+}
+
+a {
+  color: #123355;
+}
+a:hover {
+  color: #468;
+}
+input[type="text"] {
+  outline: 0;
+  padding: 5px;
+}
+button,
+input[type="submit"] {
+  padding: 3px 10px 3px 10px;
+  border: 0px;
+  outline: 0px;
+  border-radius: 20px;
+  background-color: #123355;
+  color: white;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+}
+button:hover,
+input[type="submit"]:hover {
+  background-color: #246;
+  color: white;
+  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.5);
+}
+input[type="file"] {
+  background-color: #123355;
+  color: white;
+}
+
+table {
+  border-collapse: collapse;
+  text-align: center;
+}
+table tr th {
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color: #c5c5c5;
+  border: 5px solid black;
+}
+table tr th a {
+  text-decoration: none;
+}
+table tr td {
+  border: 1px solid black;
+}
+
 .formula_list,
 .table_list {
   display: flex;
@@ -10,7 +85,7 @@
   cursor: pointer;
   background-color: #eee;
   /* width: 25px; */
-  overflow: scroll;
+  overflow: hidden;
   display: block;
 }
 
@@ -30,7 +105,25 @@
   display: none;
 }
 
+.table_data {
+  position: relative;
+}
+
+.table_data span {
+  display: none;
+}
+
+.table_data:hover span {
+  font-size: 10px;
+  display: inline;
+  position: absolute;
+  z-index: 1;
+  background-color: white;
+  border: 1px solid grey;
+}
+
 .open {
+  overflow: scroll;
   border: 1px solid black;
   border-top: 3px solid black;
   border-left: 3px solid black;

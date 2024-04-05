@@ -21,8 +21,20 @@
     <title>{% block title %} {% endblock title %}</title>
   </head>
   <body>
+    {% for (k, v) in get_flashed_messages(with_categories=True)%}
+    <div class="flashed">{{v}}</div>
+    {%endfor%}
     <a href="{{ url_for('home.index') }}">collections</a>
     <a href="{{ url_for('formula.index') }}">formulas</a>
-    {% block content %} {% endblock content %} {% block script %} {% endblock %}
+
+    {% block content %} {% endblock content %}
+    <script src="{{ url_for('static', filename='js/table2excel.js') }}"></script>
+    {% block script %} {% endblock %}
+    <script type="text/javascript">
+      const flashed = document.querySelector(".flashed");
+      flashed.addEventListener("click", () => {
+        flashed.style.display = "none";
+      });
+    </script>
   </body>
 </html>

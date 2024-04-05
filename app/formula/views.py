@@ -1,4 +1,4 @@
-from flask import render_template, redirect, request, url_for
+from flask import render_template, redirect, request, url_for, flash
 
 from . import formula
 
@@ -25,8 +25,6 @@ def delete_formula():
     delete(Formula, db, formula_id)
     return redirect(url_for('.index'))
 
-
-
 @formula.route('/add-script', methods=['post', 'get'])
 def add_script():
     formula_id = int(request.args.get('formula_id'))
@@ -34,3 +32,18 @@ def add_script():
         update(Formula, db, {'script': request.form.get('script')}, formula_id)
         return redirect(url_for('.index'))
     return redirect(url_for('.index'))
+
+@formula.route('/same-formula-chart')
+def same_formula_chart():
+    formula_name = str(request.args.get('formula_name'))
+    tables = list(Table.query.filter_by(formula_name=formula_name).all())
+    categories = []
+    values = []
+    try:
+        for table in tables:
+            values.append(table.cells[0].get_last_result(table.id, table.n_col + 1))
+            categories.append(table.name)
+        return render_template("formula/charts/same_formula_chart.html", categories=list(categories), values=values, formula_name=formula_name)
+    except:
+        flash("A table using the formula is empty")
+        return redirect(url_for(".index"))
