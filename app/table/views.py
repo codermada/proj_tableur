@@ -89,7 +89,7 @@ def add_records():
                 data=dict(zip(table.param_names.split('.'), row))
                 add_record_str = """
 for key, value in {**data,**{f"{table.formula_name}": """+table.formula_name+"""(**data)}}.items():
-    create(Cell, db, {'key': key, 'value': value, 'table_id': table_id})"""
+    create(Cell, db, {'key': key, 'value': value, 'table_id': table_id, 'created': datetime.utcnow()})"""
                 script = table.script + "\n{}"
                 exec(script.format((add_record_str)))
     except:
