@@ -56,17 +56,17 @@ def add_record():
     table_id = int(request.args.get('table_id'))
     focused = int(request.args.get('focused'))
     table = Table.query.get(table_id)
-    # try:
-    form_data = {}
-    for key, value in dict(request.form).items():
-        form_data.update({key: float(value)})
-    add_record_str = """
+    try:
+        form_data = {}
+        for key, value in dict(request.form).items():
+            form_data.update({key: float(value)})
+        add_record_str = """
 for key, value in {**form_data,**{f"{table.formula_name}": """+table.formula_name+"""(**form_data)}}.items():
     create(Cell, db, {'key': key, 'value': value, 'table_id': table_id, 'created': datetime.utcnow()})"""
-    script = table.script + "\n{}"
-    exec(script.format((add_record_str)))
-    # except:
-    #     flash("Values should be numbers")
+        script = table.script + "\n{}"
+        exec(script.format((add_record_str)))
+    except:
+        flash("Values should be numbers")
     if focused == 0:
         return redirect(url_for('.index', collection_id=collection_id))
     elif focused == 1:
