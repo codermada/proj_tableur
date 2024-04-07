@@ -10,12 +10,23 @@ from ..db_operations import create, update, delete
 def index():
     formulas_general = Formula.query.filter_by(kind='general').all()
     formulas_custom = Formula.query.filter_by(kind='custom').all()
+    try:
+        opened_formula = int(request.args.get('opened_formula'))
+        return render_template('formula/index.html', formulas_general=formulas_general, formulas_custom=formulas_custom, opened_formula=opened_formula)
+    except:
+        print("hey")
     return render_template('formula/index.html', formulas_general=formulas_general, formulas_custom=formulas_custom)
 
 @formula.route('/create-formula', methods=['post', 'get'])
 def create_formula():
     if request.method == 'POST':
-        create(Formula, db, {'name': request.form.get('name'), 'kind': 'custom'})
+        name = request.form.get('name')
+        if name.isalnum() and name[0].isalpha():
+            create(Formula, db, {'name': name, 'kind': 'custom'})
+        elif name.strip()=="":
+            flash("Formula name should not be empty")
+        else:
+            flash("Formula name should only contain letters or numbers and begin with a letter")
         return redirect(url_for('.index'))
     return redirect(url_for('.index'))
 
@@ -30,7 +41,7 @@ def add_script():
     formula_id = int(request.args.get('formula_id'))
     if request.method == 'POST':
         update(Formula, db, {'script': request.form.get('script')}, formula_id)
-        return redirect(url_for('.index'))
+        return redirect(url_for('.index', opened_formula=formula_id))
     return redirect(url_for('.index'))
 
 @formula.route('/same-formula-chart')

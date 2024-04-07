@@ -17,17 +17,22 @@ upper()}} {% endblock title %} {% block content %}
     <input type="submit" value="create table" />
   </form>
 </div>
+<div>
+  <button id="toggle">toggle</button>
+  <button id="close">close all</button>
+  <button id="open">open all</button>
+</div>
 <div class="table_list">
   {% for table in tables %}
   <div class="table_container">
-    <span class="table_name">
+    <span class="table_name {% if opened_table == table.id %}open_{% endif %}">
       <h4>{{table.name}}</h4>
     </span>
-    <div class="table">
+    <div class="table {% if opened_table == table.id %}open{% endif %}">
       {% if table.param_names != None and table.n_col > 0%}
       <div>
         <form
-          action="{{ url_for('table.add_record', collection_id=collection.id, table_id=table.id, focused=1) }}"
+          action="{{ url_for('table.add_record', collection_id=collection.id, table_id=table.id, focused=0) }}"
           method="POST"
         >
           {% for field in table.param_names.split('.')%}
@@ -68,7 +73,8 @@ upper()}} {% endblock title %} {% block content %}
           <input type="file" name="filename" />
           <input type="submit" value="load from csv" />
         </form>
-        {% include "table/_table.html" %}{%endif %}
+        <div class="table_frame">{% include "table/_table.html" %}</div>
+        {%endif %}
       </div>
     </div>
   </div>
@@ -80,7 +86,7 @@ upper()}} {% endblock title %} {% block content %}
   scr="{{ url_for('static', filename='js/script.js') }}"
 ></script>
 
-{% endblock content %} {% block script %}
+{% endblock content %} {% block script %} {{super()}}
 <script src=" {{ url_for('static', filename='js/script_t.js') }} "></script>
 <script>
   var table2excel = new Table2Excel();

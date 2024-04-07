@@ -1,5 +1,5 @@
 
-from flask import render_template, redirect, request, url_for
+from flask import render_template, redirect, request, url_for, flash
 
 from . import collection
 
@@ -11,7 +11,13 @@ from ..db_operations import create, update, delete
 def index():
     collections = Collection.query.all()
     if request.method == "POST":
-        create(Collection, db, {'name': request.form.get('name')})
+        name = request.form.get('name')
+        if name.isalnum() and name[0].isalpha():
+            create(Collection, db, {'name': name})
+        elif name.strip()=="":
+            flash("Collection name should not be empty")
+        else:
+            flash("Collection name should only contain letters or numbers and begin with a letter")
         return redirect(url_for('.index'))
     return render_template('collection/index.html', collections=collections)
 

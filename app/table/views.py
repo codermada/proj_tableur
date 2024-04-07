@@ -18,13 +18,24 @@ def index():
     collection = Collection.query.get(collection_id)
     formulas = Formula.query.all()
     tables = Table.query.filter_by(collection_id = collection_id).order_by(Table.id.desc()).all()
+    try:
+        opened_table = int(request.args.get('opened_table'))
+        return render_template('table/index.html', collection=collection, formulas=formulas, tables=tables, focus=0, opened_table=opened_table)
+    except:
+        pass
     return render_template('table/index.html', collection=collection, formulas=formulas, tables=tables, focus=0)
 
 @table.route('/create-table', methods=['post', 'get'])
 def create_table():
     collection_id = int(request.args.get('collection_id'))
     if request.method == 'POST':
-        create(Table, db, {'name': request.form.get('name'),'collection_id': collection_id})
+        name = request.form.get('name')
+        if name.isalnum() and name[0].isalpha():
+            create(Table, db, {'name': request.form.get('name'),'collection_id': collection_id})
+        elif name.strip()=="":
+            flash("Table name should not be empty")
+        else:
+            flash("Table name should only contain letters or numbers and begin with a letter")
         return redirect(url_for('.index', collection_id=collection_id))
     return redirect(url_for('.index', collection_id=collection_id))
 
@@ -68,7 +79,7 @@ for key, value in {**form_data,**{f"{table.formula_name}": """+table.formula_nam
     except:
         flash("Values should be numbers")
     if focused == 0:
-        return redirect(url_for('.index', collection_id=collection_id))
+        return redirect(url_for('.index', collection_id=collection_id, opened_table=table_id))
     elif focused == 1:
         return redirect(url_for('.view_table', table_id=table_id, collection_id=collection_id))
 
@@ -86,21 +97,26 @@ def add_records():
             file_path = "app"+url_for('static', filename="uploads/")+uploaded_file.filename
             uploaded_file.save(file_path)
             for row in get_data(file_path):
-                data=dict(zip(table.param_names.split('.'), row))
+                original_data=dict(zip(table.param_names.split('.'), row))
+                data = {}
+                for key, value in original_data.items():
+                    data.update({key: float(value)})
                 add_record_str = """
 for key, value in {**data,**{f"{table.formula_name}": """+table.formula_name+"""(**data)}}.items():
     create(Cell, db, {'key': key, 'value': value, 'table_id': table_id, 'created': datetime.utcnow()})"""
                 script = table.script + "\n{}"
                 exec(script.format((add_record_str)))
     except:
-        flash("The format may not correspond. N column should be the same and should be csv format")
+        flash("The format may not correspond, should be csv format.")
+        flash("N column should be the same.")
+        flash("Values should be numbers.")
     if focused == 0:
         return redirect(url_for('.index', collection_id=collection_id))
     elif focused == 1:
         return redirect(url_for('.view_table', table_id=table_id, collection_id=collection_id))
 
 
-@table.route('/view-table', methods=['GET', 'POST'])
+@table.route('/focus', methods=['GET', 'POST'])
 def view_table():
     collection_id = int(request.args.get('collection_id'))
     collection = Collection.query.get(collection_id)

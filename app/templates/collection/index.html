@@ -16,7 +16,7 @@ block content %}
       >
       <div>
         {% for table in collection.tables %}
-        <span style="border: 1px solid black; margin-left: 5px; padding: 1px">
+        <span class="collection_span">
           <a
             href="{{ url_for('table.view_table', table_id=table.id, collection_id=collection.id) }}"
             target="_blank"

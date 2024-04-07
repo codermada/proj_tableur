@@ -5,6 +5,11 @@
     <input type="submit" value="create formula" />
   </form>
 </div>
+<div>
+  <button id="toggle">toggle</button>
+  <button id="close">close all</button>
+  <button id="open">open all</button>
+</div>
 <h3>General formulas</h3>
 <div class="formula_list">
   {% for formula in formulas_general %}
@@ -18,8 +23,14 @@
 <div class="formula_list">
   {% for formula in formulas_custom %}
   <div class="formula_container">
-    <span class="formula_name"> {{formula.name}} </span>
-    <div class="formula">{% include "formula/script.html" %}</div>
+    <span
+      class="formula_name {% if opened_formula == formula.id %}open_{% endif %}"
+    >
+      {{formula.name}}
+    </span>
+    <div class="formula {% if opened_formula == formula.id %}open{% endif %}">
+      {% include "formula/script.html" %}
+    </div>
   </div>
   {% endfor %}
 </div>

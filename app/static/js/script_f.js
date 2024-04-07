@@ -14,3 +14,18 @@ formula_container.forEach((element) => {
     }
   });
 });
+
+const toggle_btn = document.getElementById("toggle");
+toggle_btn.addEventListener("click", () => {
+  toggle(".formula_container");
+});
+
+const open_btn = document.getElementById("open");
+open_btn.addEventListener("click", () => {
+  open(".formula_container");
+});
+
+const close_btn = document.getElementById("close");
+close_btn.addEventListener("click", () => {
+  close(".formula_container");
+});

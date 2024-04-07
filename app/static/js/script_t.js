@@ -14,3 +14,18 @@ table_container.forEach((element) => {
     }
   });
 });
+
+const toggle_btn = document.getElementById("toggle");
+toggle_btn.addEventListener("click", () => {
+  toggle(".table_container");
+});
+
+const open_btn = document.getElementById("open");
+open_btn.addEventListener("click", () => {
+  open(".table_container");
+});
+
+const close_btn = document.getElementById("close");
+close_btn.addEventListener("click", () => {
+  close(".table_container");
+});

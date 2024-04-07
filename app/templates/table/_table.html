@@ -1,14 +1,13 @@
-{% if table.param_names != None and table.n_col > 0%} {% if focus == 0 %}<button
-  id="export"
->
-  Export to excel</button
->{% endif %}
+{% if table.param_names != None and table.n_col > 0%} {% if focus == 1 %}
+<div class="export">
+  <button id="export">Export to excel</button>
+  <button id="hide_result">hide results</button>
+</div>
+{% endif %}
 
 <table data-excel-name="{{ table.name }}">
-  <tr>
-    {#
-    <th>time</th>
-    #} {% for field in table.param_names.split('.')%}
+  <tr class="tr">
+    {% for field in table.param_names.split('.')%}
     <th>
       <a
         href="{{ url_for('table.show_chart', table_id=table.id, column_name=field) }}"
@@ -26,10 +25,10 @@
     </th>
   </tr>
   {% for row in table.cells | to2D(table.n_col+1) | reverse%}
-  <tr>
+  <tr class="tr">
     {% for record in row %}
     <td class="table_data">
-      {{record.value}}{% if focus == 1 %}<span class="date">
+      {{record.value}}{% if focus == 0 %}<span class="date">
         {{record.created}} </span
       >{% endif %}
     </td>

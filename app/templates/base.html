@@ -21,20 +21,20 @@
     <title>{% block title %} {% endblock title %}</title>
   </head>
   <body>
-    {% for (k, v) in get_flashed_messages(with_categories=True)%}
-    <div class="flashed">{{v}}</div>
-    {%endfor%}
+    <div class="flashes">
+      {% for (k, v) in get_flashed_messages(with_categories=True)%}
+      <div class="flashed">{{v}}</div>
+      {%endfor%}
+    </div>
+
     <a href="{{ url_for('home.index') }}">collections</a>
     <a href="{{ url_for('formula.index') }}">formulas</a>
-
-    {% block content %} {% endblock content %}
+    <div class="container">{% block content %} {% endblock content %}</div>
+    {#
+    <div class="footer">github.com/codermada April 2024 open source</div>
+    #}
     <script src="{{ url_for('static', filename='js/table2excel.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
     {% block script %} {% endblock %}
-    <script type="text/javascript">
-      const flashed = document.querySelector(".flashed");
-      flashed.addEventListener("click", () => {
-        flashed.style.display = "none";
-      });
-    </script>
   </body>
 </html>

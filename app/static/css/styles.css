@@ -1,13 +1,23 @@
 body {
   background-color: #dde;
+  color: #092244;
+  position: relative;
 }
 * {
   margin: 2px;
+  /*  font-family: cursive;*/
+  font-family: monospace;
+}
+.flashes {
+  position: absolute;
+  width: 100%;
+  z-index: 100;
 }
 .flashed {
-  position: absolute;
+  display: flex;
   left: 5px;
-  width: 94%;
+  width: 74%;
+  margin: auto;
   background-color: #aaddff;
   border: 5px solid #12bbcc;
   color: #12bbcc;
@@ -31,9 +41,25 @@ a {
 a:hover {
   color: #468;
 }
+.collection_span {
+  border: 1px solid black;
+  margin-left: 5px;
+  padding: 1px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.7);
+}
+form {
+  border: 1px solid #123355;
+  padding: 5px;
+  width: fit-content;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.7);
+}
 input[type="text"] {
   outline: 0;
-  padding: 5px;
+  inset: 0;
+  padding: 10px;
+  border: 0px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.7);
 }
 button,
 input[type="submit"] {
@@ -43,34 +69,49 @@ input[type="submit"] {
   border-radius: 20px;
   background-color: #123355;
   color: white;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.7);
+  transition: transform 0.3s ease-in-out;
 }
 button:hover,
 input[type="submit"]:hover {
   background-color: #246;
   color: white;
-  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
+  transform: scale(1.03);
 }
 input[type="file"] {
   background-color: #123355;
   color: white;
 }
 
+.table_frame {
+  margin: auto;
+  margin-top: 5px;
+  width: 90%;
+  height: 70%;
+  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
+  overflow: scroll;
+}
+.focused {
+  height: 100%;
+}
 table {
+  margin: auto;
   border-collapse: collapse;
   text-align: center;
 }
 table tr th {
+  position: relative;
   padding-left: 5px;
   padding-right: 5px;
   background-color: #c5c5c5;
-  border: 5px solid black;
+  border: 5px solid #123355;
 }
 table tr th a {
   text-decoration: none;
 }
 table tr td {
-  border: 1px solid black;
+  border: 1px solid #123355;
 }
 
 .formula_list,
@@ -84,17 +125,20 @@ table tr td {
 .table_name {
   cursor: pointer;
   background-color: #eee;
-  /* width: 25px; */
+  border-radius: 5px 0px 0px 0px;
   overflow: hidden;
   display: block;
+  transition: background-color 1s ease-in-out;
 }
 
 .formula_name:hover,
 .table_name:hover {
   cursor: pointer;
-  border-top: 1px solid black;
-  border-left: 1px solid black;
-  border-right: 1px solid black;
+  background-color: #dfdfdf;
+  border-radius: 5px 0px 0px 0px;
+  border-top: 1px solid #123355;
+  border-left: 1px solid #123355;
+  border-right: 1px solid #123355;
   width: fit-content;
   display: block;
 }
@@ -118,26 +162,46 @@ table tr td {
   display: inline;
   position: absolute;
   z-index: 1;
-  background-color: white;
+  background-color: #efefef;
   border: 1px solid grey;
 }
 
 .open {
   overflow: scroll;
-  border: 1px solid black;
-  border-top: 3px solid black;
-  border-left: 3px solid black;
+  position: absolute;
+  border: 1px solid #123355;
+  border-radius: 0px 10px 20px 10px;
+  border-top: 3px solid #123355;
+  border-left: 3px solid #123355;
+  box-shadow: -10px 10px 10px rgba(0, 0, 0, 0.5);
+  background-color: #efefef;
   display: block;
+  z-index: 2;
+  transition: z-index, margin-top 0.3s ease-in-out;
+}
+
+.open:hover {
+  margin-top: -10px;
+  z-index: 100;
+  cursor: grab;
 }
 
 .open_ {
   position: relative;
-  border: 3px solid black;
+  border: 3px solid #123355;
   background-color: #c5c5c5;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid #123355;
   margin-bottom: -2px;
   z-index: 1;
   width: fit-content;
+  display: block;
+}
+
+.hide {
+  display: none;
+}
+
+.show {
   display: block;
 }
 
@@ -145,6 +209,11 @@ table tr td {
   outline: 0;
   border: 0;
   width: 90%;
-  background-color: black;
+  background-color: #123355;
   color: white;
+}
+.footer {
+  position: absolute;
+  width: 100%;
+  z-index: 100;
 }

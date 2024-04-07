@@ -47,11 +47,13 @@ endblock title %} {% block content %}
         <input type="file" name="filename" />
         <input type="submit" value="load from csv" />
       </form>
-      {% include "table/_table.html" %} {% endif %} {%endif %}
+      <div class="table_frame focused">{% include "table/_table.html" %}</div>
+      {% endif %} {%endif %}
     </div>
   </div>
 </div>
-{% endblock content %} {% block script %}
+{% endblock content %} {% block script %} {{super()}}
+<script src=" {{ url_for('static', filename='js/script_table_focused.js') }} "></script>
 <script>
   var table2excel = new Table2Excel();
 
