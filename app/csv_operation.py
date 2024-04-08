@@ -10,5 +10,5 @@ def get_data(path):
     for row in data:
         n_col = len(row)
         for j in row:
-            result.append(float(j))
+            result.append(j)
     return reverse(to2D(result, n_col))

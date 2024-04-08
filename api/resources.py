@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, jsonify
 
 from flask_restful import Resource
 
@@ -39,7 +39,7 @@ http://127.0.0.1:5000/api/table-column?table_id=1&column_name=name
 class CellRowResource(Resource):
     def get(self):
         """usage
-http://127.0.0.1:5000/api/table-row?table_id=3&row_id=2
+http://127.0.0.1:5000/api/table-row?table_id=9&row_id=2
         """
         row_id = int(request.args.get('row_id'))
         table_id = int(request.args.get('table_id'))
@@ -49,6 +49,12 @@ http://127.0.0.1:5000/api/table-row?table_id=3&row_id=2
         row_data = []
         cells = list(Cell.query.filter_by(table_id=table_id).all())
         for cell in cells:
-            row_data.append(cell.value)
+            if cell.text != "" or cell.text != None:
+                try:
+                    row_data.append(float(cell.text))
+                except:
+                    row_data.append(cell.text)
+            else:
+                row_data.append(cell.value)
         row_data = reverse(to2D(row_data, table.n_col + 1))[row_id]
         return dict(zip(labels, row_data))

@@ -3,10 +3,10 @@
   <button id="export">Export to excel</button>
   <button id="hide_result">hide results</button>
 </div>
-{% endif %}
-
+{% endif %} {% set i = 0%}
 <table data-excel-name="{{ table.name }}">
   <tr class="tr">
+    <th>ID</th>
     {% for field in table.param_names.split('.')%}
     <th>
       <a
@@ -26,11 +26,19 @@
   </tr>
   {% for row in table.cells | to2D(table.n_col+1) | reverse%}
   <tr class="tr">
+    <td>
+      <a
+        href="{{ url_for('table.view_row', table_id=table.id, row_id=loop.index0) }}"
+        >{{loop.index0}}</a
+      >
+    </td>
     {% for record in row %}
     <td class="table_data">
-      {{record.value}}{% if focus == 0 %}<span class="date">
+      {% if record.text != "" and record.text != None%} {{record.text}}{% if
+      focus == 0 %}<span class="date"> {{record.created}} </span>{% endif %} {%
+      else %} {{record.value}}{% if focus == 0 %}<span class="date">
         {{record.created}} </span
-      >{% endif %}
+      >{% endif %} {% endif %}
     </td>
     {% endfor %}
   </tr>

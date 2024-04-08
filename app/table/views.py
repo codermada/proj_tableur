@@ -77,7 +77,15 @@ for key, value in {**form_data,**{f"{table.formula_name}": """+table.formula_nam
         script = table.script + "\n{}"
         exec(script.format((add_record_str)))
     except:
-        flash("Values should be numbers")
+        try:
+            form_data = dict(request.form)
+            add_record_str = """
+for key, value in {**form_data,**{f"{table.formula_name}": """+table.formula_name+"""(**form_data)}}.items():
+    create(Cell, db, {'key': key, 'text': value, 'table_id': table_id, 'created': datetime.utcnow()})"""
+            script = table.script + "\n{}"
+            exec(script.format((add_record_str)))
+        except:
+            flash("The values may not correspond to the script rules")
     if focused == 0:
         return redirect(url_for('.index', collection_id=collection_id, opened_table=table_id))
     elif focused == 1:
@@ -96,20 +104,26 @@ def add_records():
             uploaded_file.filename = 'data.csv'
             file_path = "app"+url_for('static', filename="uploads/")+uploaded_file.filename
             uploaded_file.save(file_path)
+            field = "value"
             for row in get_data(file_path):
                 original_data=dict(zip(table.param_names.split('.'), row))
                 data = {}
                 for key, value in original_data.items():
-                    data.update({key: float(value)})
+                    try:
+                        data.update({key: float(value)})
+                    except:
+                        data.update({key: value})
+                        field = "text"
                 add_record_str = """
 for key, value in {**data,**{f"{table.formula_name}": """+table.formula_name+"""(**data)}}.items():
-    create(Cell, db, {'key': key, 'value': value, 'table_id': table_id, 'created': datetime.utcnow()})"""
+    create(Cell, db, {'key': key, '"""+field+"""': value, 'table_id': table_id, 'created': datetime.utcnow()})"""
                 script = table.script + "\n{}"
                 exec(script.format((add_record_str)))
+                field = "value"
     except:
         flash("The format may not correspond, should be csv format.")
         flash("N column should be the same.")
-        flash("Values should be numbers.")
+        flash("Values should correspond to the formula's rules")
     if focused == 0:
         return redirect(url_for('.index', collection_id=collection_id))
     elif focused == 1:
@@ -132,5 +146,20 @@ def show_chart():
     cells_list = []
     cells = list(Cell.query.filter_by(table_id=table_id).filter_by(key=column_name).all())
     for cell in cells:
-        cells_list.append(cell.value)
+        if cell.text != "":
+            try:
+                cells_list.append(float(cell.text))
+            except:
+                pass
+        else:
+            cells_list.append(cell.value)
     return render_template("table/charts/cell_chart.html", table=table, data=cells_list, column_name=column_name)
+
+
+@table.route('/view-row')
+def view_row():
+    row_id = int(request.args.get("row_id"))
+    table_id = int(request.args.get('table_id'))
+    table = Table.query.get(table_id)
+    param_names = table.param_names.split('.')
+    return render_template("table/row.html", table=table, table_id=table_id, row_id=row_id, param_names=param_names, formula_name=table.formula_name)

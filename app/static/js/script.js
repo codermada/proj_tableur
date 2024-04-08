@@ -1,6 +1,6 @@
 const flashed = document.querySelectorAll(".flashed");
 flashed.forEach((element) => {
-  element.addEventListener("click", (element) => {
+  element.addEventListener("click", () => {
     element.style.display = "none";
   });
 });

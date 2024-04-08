@@ -1,0 +1,28 @@
+{% include "base.html" %} {% block title %} {% endblock title %} {% block
+content %}
+<div>
+  <a
+    href="{{ url_for('table.index', table_id=table_id, collection_id=table.collection_id) }}"
+    >{{table.name}}</a
+  >
+</div>
+<div id="table"></div>
+{% endblock content %} {% block script %}
+<script>
+
+        const table = document.getElementById("table");
+      const data = fetch("http://127.0.0.1:5000/api/table-row?table_id={{table_id}}&row_id={{row_id}}")
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          let content = "";
+    {% for param_name in param_names %}
+    console.log(data.{{param_name}});
+    content = `<tr>${content}<td class="view_row_data">{{param_name}}</td><td class="view_row_data">${data.{{param_name}}}</td></tr>`;
+    {% endfor %}
+    content = `<tr>${content}<td class="view_row_data">{{formula_name}}</td><td class="view_row_data">${data.{{formula_name}}}</td></tr>`;
+          table.innerHTML = `<table class="view_row_table">${content}</table>`;
+  });
+</script>
+{% endblock script %}

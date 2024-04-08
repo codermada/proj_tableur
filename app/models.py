@@ -57,7 +57,8 @@ class Cell(db.Model):
     __tablename__ = 'cells'
     id = db.Column(db.Integer, primary_key=True)
     key = db.Column(db.String(500), default="")
-    value = db.Column(db.Float, default=None)
+    value = db.Column(db.Float, default=0.0)
+    text = db.Column(db.String(500), default="")
     table_id = db.Column(db.Integer, db.ForeignKey('tables.id'))
     created = db.Column(db.DateTime, default=datetime.utcnow())
     def __repr__(self):
@@ -69,6 +70,12 @@ class Cell(db.Model):
         cell_list = []
         cells = list(table.cells.filter_by(table_id=table_id))
         for cell in cells:
-            cell_list.append(cell.value)
+            if cell.text != "":
+                try:
+                    cell_list.append(float(cell.text))
+                except:
+                    cell_list.append(cell.text)
+            else:
+                cell_list.append(cell.value)
         cell_list = reverse(to2D(cell_list, n_col))
         return cell_list[0][n_col-1]
