@@ -1,4 +1,4 @@
-from flask import request, jsonify
+from flask import request
 
 from flask_restful import Resource
 
@@ -49,7 +49,7 @@ http://127.0.0.1:5000/api/table-row?table_id=9&row_id=2
         row_data = []
         cells = list(Cell.query.filter_by(table_id=table_id).all())
         for cell in cells:
-            if cell.text != "" or cell.text != None:
+            if cell.text != "":
                 try:
                     row_data.append(float(cell.text))
                 except:
