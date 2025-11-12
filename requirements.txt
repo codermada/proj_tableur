@@ -1,0 +1,8 @@
+Package                   Version
+------------------------- ------------
+Flask                     2.3.2
+Flask-Migrate             4.0.4
+Flask-Script              2.0.6
+Flask-SQLAlchemy          3.0.5
+Flask-WTF                 1.1.1
+SQLAlchemy                2.0.24
