@@ -1,0 +1,33 @@
+{% extends "base.html" %} {% block title %} COLLECTIONS {% endblock title %} {%
+block content %}
+
+<div>
+  <form action="/collection" method="POST">
+    <input type="text" name="name" placeholder="name" />
+    <input type="submit" value="create a collection" />
+  </form>
+</div>
+<div>
+  <div>
+    {% for collection in collections %}{%set i = 0%}
+    <div>
+      <a href="{{ url_for('table.index', collection_id=collection.id) }}"
+        >{{collection.name}}</a
+      >
+      <div>
+        {% for table in collection.tables %}
+        <span class="collection_span">
+          <a
+            href="{{ url_for('table.view_table', table_id=table.id, collection_id=collection.id) }}"
+            target="_blank"
+            >{{table.name}}</a
+          >{% if table.cells[0]%} | {{table.formula_name}}:
+          {{table.cells[0].get_last_result(table.id, table.n_col + 1)}} {% endif
+          %}</span
+        >{% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock content %}

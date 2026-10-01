@@ -1,0 +1,74 @@
+{% extends "base.html" %} {% block title %} CHART {% endblock title %} {% block
+content %}
+<div id="container"></div>
+{% endblock content %} {% block script %}
+<script src="{{ url_for('static', filename='code/highcharts.js') }}"></script>
+<script src="{{ url_for('static', filename='code/highcharts-3d.js') }}"></script>
+<script src="{{ url_for('static', filename='code/modules/accessibility.js') }}"></script>
+<script type="text/javascript">
+  const data = {{data}};
+  Highcharts.chart("container", {
+    chart: {
+      type: "area",
+      options3d: {
+        enabled: true,
+        alpha: 15,
+        beta: 0,
+        depth: 0,
+      },
+    },
+    title: {
+      text: "{{column_name}}",
+      align: "left",
+    },
+    accessibility: {
+      description: "",
+      keyboardNavigation: {
+        seriesNavigation: {
+          mode: "serialize",
+        },
+      },
+    },
+    lang: {
+      accessibility: {
+        axis: {
+          xAxisDescriptionPlural: "",
+        },
+      },
+    },
+    yAxis: {
+      labels: {
+        format: "{value:,.2f}",
+      },
+      gridLineDashStyle: "Dash",
+    },
+    xAxis: [
+      {
+        visible: false,
+      }
+    ],
+    plotOptions: {
+      area: {
+        depth: 100,
+        marker: {
+          enabled: true,
+        },
+        states: {
+          inactive: {
+            enabled: false,
+          },
+        },
+      },
+    },
+    series: [
+      {
+        name: "{{column_name}}",
+        lineColor: "rgb(12,30,50)",
+        color: "rgb(200,110,50)",
+        fillColor: "rgba(0,0,0, 0.2)",
+        data: data,
+      },
+    ],
+  });
+</script>
+{% endblock script %}
